@@ -1,1 +1,0 @@
-print("Da li je ovo automatski sacuvano")
