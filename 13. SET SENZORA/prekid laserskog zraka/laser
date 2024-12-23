@@ -1,0 +1,9 @@
+from time import sleep
+from machine import Pin, ADC
+
+foto_senz_pin = 3.3 * ADC(Pin(3)).read_u16 / 65535
+led_pin = Pin(5, Pin.OUT)
+
+while True:
+    led_pin.value(foto_senz_pin)
+

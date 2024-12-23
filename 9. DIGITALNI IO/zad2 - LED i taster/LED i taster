@@ -1,0 +1,19 @@
+# kod je pisan naknadno bez testiranja na Arduino-u tako da mozda ne radi bas najbolje
+from time import sleep
+from machine import Pin
+
+#d2 taster
+#d3 dioda
+
+btn_pin = Pin(5, Pin.IN)
+led_pin = Pin(6, Pin.OUT)
+
+stanje = 0
+
+while True:
+    if not btn_pin.value():
+        sleep(0.06)
+        while not btn_pin.value():
+            if btn_pin.value():
+                stanje = not stanje
+                led_pin.value(stanje)

@@ -1,0 +1,15 @@
+from time import sleep
+from machine import Pin, ADC
+
+led_pin = Pin(5, Pin.OUT)
+pot_pin = Pin(1)
+
+pot_value = 3.3 * ADC(pot_pin).read_u16() / 65535
+
+granica = 1
+
+while True:
+    if pot_value >= granica:
+        led_pin.value(1)
+    else:
+        led_pin.value(0)

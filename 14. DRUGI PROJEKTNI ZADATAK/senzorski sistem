@@ -1,0 +1,90 @@
+from time import sleep
+from machine import Pin, ADC
+import dht
+
+# Led threshold
+# gas threshold
+
+#GAS_THRESHOLD = 46000 default
+GAS_THRESHOLD = 60000
+#PIN LAYOUT
+# LED1 - D2 - 5
+# LED2 - D3 - 6
+# BUZZER - D4 - 7
+# PHOTO2 - D5 - 8
+# PHOTO1 - D6 - 9
+# MQ2 - A1 - 2
+# DHT11 - A0 - 1
+
+#analogni
+sen_temp = dht.DHT11(Pin(1))
+sen_gas = Pin(2)
+
+#digitalni
+led_pin1 = Pin(5, Pin.OUT)
+led_pin2 = Pin(6, Pin.OUT)
+buzz_pin = Pin(7, Pin.OUT)
+
+sen_photo2 = Pin(8, Pin.IN)
+sen_photo1 = Pin(9, Pin.IN)
+
+
+
+# LED i  phres
+    # - PRIORITET 2
+    # - da li rade simultano ili odvojeno?
+    # - analogna ili digitalna verzija
+    # - digitalna manje koda, ali komplikovanije za nabost
+    # - koristimo ADC
+    # - 2 analogna ulaza
+    # - 1 ili 2 digitalna izlaza
+    
+# MQ-2 GAS
+    # - PRIORITET 1
+    # - od 100ppm do 1000ppm
+    # - uzeti realnu vrijednost pri kojoj se pali(skontaj na netu)
+    # - analogna ili digitalna
+    # - 1 a/d ulaz
+    # - 1 d izlaz buzzer
+    
+# DHT-11
+    # - PRIORITET 3
+    # - koristimo dht library
+    # - 1 analogni ulaz
+    # - izlaz se ispisuje u konzoli
+    # - odvojeno mjerimo temperaturu u stepenma C i vlaznost u  %
+
+def clear():
+    print("\x1B\x5B2J", end="")
+    print("\x1B\x5BH", end="")
+
+
+while True:
+    # paljenje buzzera na detekciju gasa
+    if ADC(sen_gas).read_u16() >= GAS_THRESHOLD:
+        buzz_pin.value(1)
+    else:
+        buzz_pin.value(0)
+    
+    # paljenje LED na gubitak svjetlosti
+    led_pin1.value(sen_photo1.value())
+    led_pin2.value(sen_photo2.value())
+    
+    # ispis temperature i vlaznosti u konzolu
+    sen_temp.measure()
+    sleep(1)
+    clear()
+    print("\nTemperatura", sen_temp.temperature())
+    print("Vlaznost", sen_temp.humidity())
+        
+
+
+
+
+
+
+
+
+
+
+

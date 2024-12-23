@@ -1,0 +1,49 @@
+from time import sleep
+from machine import Pin
+
+#d2 stanje tastera 5
+#d4 crvena 7
+#d5 zuta 8
+#d6 zelena 9
+led_crvena = Pin(9, Pin.OUT)
+led_zuta = Pin(8, Pin.OUT)
+led_zelena = Pin(7, Pin.OUT)
+radi = True
+
+def pritisak_handler(pin):
+    global radi
+    sleep(0.1)
+    if not pin.value():
+        radi = not radi
+
+
+btn_pin = Pin(5, Pin.IN)
+btn_pin.irq(handler=pritisak_handler, trigger=Pin.IRQ_FALLING)
+
+while True:
+    if radi:
+        led_zelena.value(0)
+        led_crvena.value(1)
+        sleep(5)
+        if not radi:
+            continue
+        led_crvena.value(0)
+        led_zuta.value(1)
+        sleep(2)
+        if not radi:
+            continue
+        led_zuta.value(0)
+        led_zelena.value(1)
+        sleep(4)
+        if not radi:
+            continue
+    if not radi:
+        led_crvena.value(0)
+        led_zelena.value(0)
+        led_zuta.value(1)
+        sleep(1)
+        led_zuta.value(0)
+        sleep(1)
+        
+
+

@@ -1,0 +1,21 @@
+from time import sleep
+from machine import Pin
+
+led_stanje = 0
+
+def pritisak_handler(pin):
+    global led_stanje
+    sleep(0.1)
+    if not pin.value():
+        led_stanje = not led_stanje
+
+
+led_pin = Pin(6, Pin.OUT)
+
+btn_pin = Pin(5, Pin.IN)
+btn_pin.irq(handler=pritisak_handler, trigger=Pin.IRQ_FALLING)
+
+while True:
+    led_pin.value(led_stanje)
+
+
